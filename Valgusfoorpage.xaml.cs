@@ -17,7 +17,7 @@ namespace MobileApplication
         Label timerLabel;
         bool bl = false;
 
-        public Valgusfoorpage()
+        public Valgusfoorpage(int k)
         {
             lbl = new Label()
             {

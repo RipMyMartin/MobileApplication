@@ -2,29 +2,15 @@
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        public MainPage(int k)
         {
-            var valgus_btn = new Button
+            Title = "Home";
+            Content = new Label
             {
-                Text = "Valgusfoor",
-                BackgroundColor = Color.FromRgb(255, 255, 255),
+                Text = "Welcome to home!",
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
             };
-
-            valgus_btn.Clicked += Valgus_btn_Clicked;
-
-            Content = new StackLayout
-            {
-                Margin = 20,
-                Children =
-                {
-                    valgus_btn
-                }
-            };
-        }
-
-        private async void Valgus_btn_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new Valgusfoorpage());
         }
     }
 }

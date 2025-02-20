@@ -63,6 +63,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Lumememm.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="RGB_mudel.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Valgusfoorpage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

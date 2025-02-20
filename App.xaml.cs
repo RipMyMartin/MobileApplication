@@ -6,7 +6,7 @@
         {
             InitializeComponent();
 
-            MainPage = new Valgusfoorpage();
+            MainPage = new NavigationPage(new Menu());
         }
     }
 }

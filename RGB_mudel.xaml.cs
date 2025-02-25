@@ -14,9 +14,7 @@ public partial class RGB_mudel : ContentPage
     Slider GreenSlider;
     Label BlueLabel;
     Slider BlueSlider;
-    Label RadiusLabel;
-    Slider RadiusSlider;
-
+    Entry ColorCodeEntry;
 
     AbsoluteLayout MainBody;
 
@@ -29,15 +27,15 @@ public partial class RGB_mudel : ContentPage
             BackgroundColor = Colors.LightGray,
             Content = new Label
             {
-                Text = "RBG mudeli",
+                Text = "RGB Model",
                 FontSize = 18,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
             },
             CornerRadius = 0,
             Padding = 0,
-
         };
+
         RedLabel = new Label
         {
             BackgroundColor = Color.FromRgb(255, 255, 255),
@@ -61,6 +59,7 @@ public partial class RGB_mudel : ContentPage
             Maximum = 255,
             Value = 0,
         };
+
         BlueLabel = new Label
         {
             BackgroundColor = Color.FromRgb(255, 255, 255),
@@ -70,18 +69,6 @@ public partial class RGB_mudel : ContentPage
         {
             Minimum = 0,
             Maximum = 255,
-            Value = 0,
-        };
-
-        RadiusLabel = new Label
-        {
-            BackgroundColor = Color.FromRgb(255, 255, 255),
-            Text = "Radius",
-        };
-        RadiusSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 150,
             Value = 0,
         };
 
@@ -117,60 +104,81 @@ public partial class RGB_mudel : ContentPage
             },
         };
 
+        ColorCodeEntry = new Entry
+        {
+            Placeholder = "Enter Hex Code (#RRGGBB)",
+            Text = "#000000",
+            Keyboard = Keyboard.Default,
+            BackgroundColor = Colors.White,
+            TextColor = Colors.Black,
+            HorizontalOptions = LayoutOptions.Center,
+        };
+
         RedSlider.ValueChanged += Sl_Value_Changed;
         GreenSlider.ValueChanged += Sl_Value_Changed;
         BlueSlider.ValueChanged += Sl_Value_Changed;
-        RadiusSlider.ValueChanged += Sl_Value_Changed;
+        ColorCodeEntry.TextChanged += ColorCodeEntry_TextChanged;
 
-        MainBody = new AbsoluteLayout { Children = { RedLabel, RedSlider, GreenLabel, GreenSlider, BlueLabel, BlueSlider, ColorCodeBox, ColorBox, RadiusLabel, RadiusSlider, TitleBar } };
+        MainBody = new AbsoluteLayout { Children = { RedLabel, RedSlider, GreenLabel, GreenSlider, BlueLabel, BlueSlider, ColorCodeBox, ColorBox, ColorCodeEntry, TitleBar } };
 
         int CenterPoint = 40;
 
         AbsoluteLayout.SetLayoutBounds(TitleBar, new Rect(0, 0, 400, 50));
-
         AbsoluteLayout.SetLayoutBounds(ColorBox, new Rect(CenterPoint, 100, 300, 300));
         AbsoluteLayout.SetLayoutBounds(ColorCodeBox, new Rect(150, 400, 100, 40));
-
-        AbsoluteLayout.SetLayoutBounds(RedLabel, new Rect(CenterPoint, 450, 300, 60));
-        AbsoluteLayout.SetLayoutBounds(RedSlider, new Rect(CenterPoint, 450, 300, 60));
-
-        AbsoluteLayout.SetLayoutBounds(GreenLabel, new Rect(CenterPoint, 500, 300, 60));
-        AbsoluteLayout.SetLayoutBounds(GreenSlider, new Rect(CenterPoint, 500, 300, 60));
-
-        AbsoluteLayout.SetLayoutBounds(BlueLabel, new Rect(CenterPoint, 550, 300, 60));
-        AbsoluteLayout.SetLayoutBounds(BlueSlider, new Rect(CenterPoint, 550, 300, 60));
-
-        AbsoluteLayout.SetLayoutBounds(RadiusLabel, new Rect(CenterPoint, 600, 300, 60));
-        AbsoluteLayout.SetLayoutBounds(RadiusSlider, new Rect(CenterPoint, 600, 300, 60));
-
+        AbsoluteLayout.SetLayoutBounds(ColorCodeEntry, new Rect(150, 450, 200, 40));
+        AbsoluteLayout.SetLayoutBounds(RedLabel, new Rect(CenterPoint, 500, 300, 60));
+        AbsoluteLayout.SetLayoutBounds(RedSlider, new Rect(CenterPoint, 500, 300, 60));
+        AbsoluteLayout.SetLayoutBounds(GreenLabel, new Rect(CenterPoint, 550, 300, 60));
+        AbsoluteLayout.SetLayoutBounds(GreenSlider, new Rect(CenterPoint, 550, 300, 60));
+        AbsoluteLayout.SetLayoutBounds(BlueLabel, new Rect(CenterPoint, 600, 300, 60));
+        AbsoluteLayout.SetLayoutBounds(BlueSlider, new Rect(CenterPoint, 600, 300, 60));
 
         Content = MainBody;
     }
+
     private void Sl_Value_Changed(object sender, ValueChangedEventArgs e)
     {
         if (sender == RedSlider) { RedLabel.Text = String.Format("Red = {0:F1}%", ((float)e.NewValue / 255.0) * 100); }
         if (sender == GreenSlider) { GreenLabel.Text = String.Format("Green = {0:F1}%", ((float)e.NewValue / 255.0) * 100); }
         if (sender == BlueSlider) { BlueLabel.Text = String.Format("Blue = {0:F1}%", ((float)e.NewValue / 255.0) * 100); }
-        if (sender == RadiusSlider)
+
+        UpdateColorBoxAndCode();
+    }
+    private void ColorCodeEntry_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (IsValidHexColor(e.NewTextValue))
         {
-            ColorBox.StrokeShape = new RoundRectangle
-            {
-                CornerRadius = new CornerRadius((int)e.NewValue, (int)e.NewValue, (int)e.NewValue, (int)e.NewValue)
-            };
+            ColorCodeLabel.Text = e.NewTextValue;
+            ColorBox.BackgroundColor = Color.FromHex(e.NewTextValue);
         }
-        int based = 16;
+    }
 
-        string r = Convert.ToString((int)RedSlider.Value, based);
-        string g = Convert.ToString((int)GreenSlider.Value, based);
-        string b = Convert.ToString((int)BlueSlider.Value, based);
+    private bool IsValidHexColor(string hex)
+    {
+        if (hex.StartsWith("#") && hex.Length == 7)
+        {
+            try
+            {
+                var color = Color.FromHex(hex);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        return false;
+    }
 
-        if (r.Length == 1) { r = "0" + r; }
-        if (g.Length == 1) { g = "0" + g; }
-        if (b.Length == 1) { b = "0" + b; }
+    private void UpdateColorBoxAndCode()
+    {
+        int red = (int)RedSlider.Value;
+        int green = (int)GreenSlider.Value;
+        int blue = (int)BlueSlider.Value;
 
-        string hexText = "#" + r + g + b;
-
-        ColorCodeLabel.Text = hexText;
-        ColorBox.BackgroundColor = Color.FromRgb((int)RedSlider.Value, (int)GreenSlider.Value, (int)BlueSlider.Value);
+        string hexColor = $"#{red:X2}{green:X2}{blue:X2}";
+        ColorCodeLabel.Text = hexColor;
+        ColorBox.BackgroundColor = Color.FromRgb(red, green, blue);
     }
 }

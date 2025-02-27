@@ -27,7 +27,7 @@ public partial class RGB_mudel : ContentPage
             BackgroundColor = Colors.LightGray,
             Content = new Label
             {
-                Text = "RGB Model",
+                Text = " -__ RGB __- ",
                 FontSize = 18,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,

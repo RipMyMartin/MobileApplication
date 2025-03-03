@@ -4,20 +4,11 @@
              x:Class="MobileApplication.TripsTrapsTrull"
              Title="TripsTrapsTrull">
     <VerticalStackLayout>
-        <TextBlock Text="Trips traps trull" utu:AutoLayout.IsIndependentLayout="True" Margin="109,40,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="172" Height="33" />
-        <Rectangle utu:AutoLayout.IsIndependentLayout="True" Margin="15,123,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="360" Height="306" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="45,151,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="165,151,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="285,151,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="45,243,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="165,243,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="285,243,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="45,335,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="165,335,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="12" RadiusY="12" utu:AutoLayout.IsIndependentLayout="True" Margin="285,335,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" />
-        <Rectangle RadiusX="8" RadiusY="8" utu:AutoLayout.IsIndependentLayout="True" Margin="45,441,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Height="75" />
-        <Rectangle RadiusX="8" RadiusY="8" utu:AutoLayout.IsIndependentLayout="True" Margin="270,441,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Height="75" />
-        <TextBlock Text="X" utu:AutoLayout.IsIndependentLayout="True" Margin="66,451,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="33" Height="35" />
+        <Label 
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            />
     </VerticalStackLayout>
 </ContentPage>
     

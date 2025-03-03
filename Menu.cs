@@ -2,8 +2,8 @@ namespace MobileApplication;
 
 internal class Menu : ContentPage
 {
-    List<ContentPage> pages = new List<ContentPage>() { new MainPage(0), new Valgusfoorpage(1), new RGB_mudel(2), new Lumememm(3) };
-    List<string> txt = new List<string> { "Kodu", "Valgusfoor", "RGB Mudel", "Lumememm" };
+    List<ContentPage> pages = new List<ContentPage>() { new MainPage(0), new Valgusfoorpage(1), new RGB_mudel(2), new Lumememm(3), new TripsTrapsTrull(4) };
+    List<string> txt = new List<string> { "Kodu", "Valgusfoor", "RGB Mudel", "Lumememm", "TripsTrapsTrull" };
     List<Button> btns = new List<Button>();
     public Menu()
 	{

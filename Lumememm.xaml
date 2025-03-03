@@ -78,6 +78,7 @@
                     <Button x:Name="ColorButton" CornerRadius="10" Padding="0" Margin="0" Grid.Row="0" Grid.Column="2" Text="Koloreerima" TextColor="DimGray" FontAttributes="Bold" BackgroundColor = "LightBlue" VerticalOptions="End" Clicked="OnColorButtonClicked"/>
                     <Button x:Name="MeltButton" CornerRadius="10" Padding="0" Margin="0" Grid.Row="1" Grid.Column="0" Text="Sulatama" TextColor="DimGray" FontAttributes="Bold" BackgroundColor = "LightBlue" VerticalOptions="End" Clicked="OnMeltButtonClicked"/>
                     <Button x:Name="JumpButton" CornerRadius="10" Padding="0" Margin="0" Grid.Row="1" Grid.Column="2" Text="Hüppama" TextColor="DimGray" FontAttributes="Bold" BackgroundColor = "LightBlue" VerticalOptions="End" Clicked="OnJumpButtonClicked"/>
+                    <Button x:Name="Movie" CornerRadius="10" Padding="0" Margin="0" Grid.Row="1" Grid.Column="2" Text="Hüppama" TextColor="DimGray" FontAttributes="Bold" BackgroundColor = "LightBlue" VerticalOptions="End" Clicked="OnJumpButtonClicked"/>
 
                 </Grid>
             </StackLayout>

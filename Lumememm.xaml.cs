@@ -1,87 +1,94 @@
 ﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace MobileApplication;
-
-public partial class Lumememm : ContentPage
+namespace MobileApplication
 {
-    private bool HideButtonClicked = true;
-    private bool JumpButtonClicked = true;
-    public Lumememm(int k)
+    public partial class Lumememm : ContentPage
     {
-        InitializeComponent();
-        HideButton.Clicked += OnHideButtonClicked;
-        ShowButton.Clicked += OnShowButtonClicked;
-        ColorButton.Clicked += OnColorButtonClicked;
-        MeltButton.Clicked += OnMeltButtonClicked;
-        JumpButton.Clicked += OnJumpButtonClicked;
-    }
+        private bool HideButtonClicked = true;
+        private bool JumpButtonClicked = true;
 
-    private void OnHideButtonClicked(object sender, EventArgs e)
-    {
-        Container.IsVisible = false;
-    }
+        public Lumememm(int k)
+        {
+            InitializeComponent();
+            HideButton.Clicked += OnHideButtonClicked;
+            ShowButton.Clicked += OnShowButtonClicked;
+            ColorButton.Clicked += OnColorButtonClicked;
+            MeltButton.Clicked += OnMeltButtonClicked;
+            JumpButton.Clicked += OnJumpButtonClicked;
+        }
 
-    private async void OnShowButtonClicked(object sender, EventArgs e)
-    {
-        Container.IsVisible = true;
+        private void OnHideButtonClicked(object sender, EventArgs e) => Container.IsVisible = false;
 
-        Pea.BackgroundColor = Color.FromRgb(255,255,255);
-        Kael.BackgroundColor = Color.FromRgb(255, 255, 255);
-        Keha.BackgroundColor = Color.FromRgb(255, 255, 255);
+        private async void OnShowButtonClicked(object sender, EventArgs e)
+        {
+            Container.IsVisible = true;
+            ResetBackgroundColors();
 
-        await Container.FadeTo(1, 1000, Easing.CubicIn);
-        await Container.TranslateTo(0, 0, 2000, Easing.CubicOut);
+            await AnimateContainerAndElements();
+        }
 
-        await Pea.ScaleTo(1, 1000, Easing.CubicIn);
-        await Kael.ScaleTo(1, 1000, Easing.CubicIn);
-        await Keha.ScaleTo(1, 1000, Easing.CubicIn);
+        private void ResetBackgroundColors()
+        {
+            Pea.BackgroundColor = Kael.BackgroundColor = Keha.BackgroundColor = Color.FromRgb(255, 255, 255);
+        }
 
-        await Task.WhenAll(
-        Pea.TranslateTo(0, 0, 1000),
-        Kael.TranslateTo(0, 0, 1000),
-        Keha.TranslateTo(0, 0, 1000));
-    }
+        private async Task AnimateContainerAndElements()
+        {
+            await Container.FadeTo(1, 1000, Easing.CubicIn);
+            await Container.TranslateTo(0, 0, 2000, Easing.CubicOut);
 
-    private void OnColorButtonClicked(object sender, EventArgs e)
-    {
-        Random rnd = new Random();
+            await Task.WhenAll(
+                Pea.ScaleTo(1, 1000, Easing.CubicIn),
+                Kael.ScaleTo(1, 1000, Easing.CubicIn),
+                Keha.ScaleTo(1, 1000, Easing.CubicIn),
+                Pea.TranslateTo(0, 0, 1000),
+                Kael.TranslateTo(0, 0, 1000),
+                Keha.TranslateTo(0, 0, 1000)
+            );
+        }
 
-        Color PeaColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
-        Color KaelColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
-        Color KehaColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
+        private Color GetRandomColor(Random rnd) 
+        {
+            return Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
+        } 
 
-        Pea.BackgroundColor = PeaColor;
-        Kael.BackgroundColor = KaelColor;
-        Keha.BackgroundColor = KehaColor;
-    }
+        private void OnColorButtonClicked(object sender, EventArgs e)
+        {
+            var rnd = new Random();
+            Pea.BackgroundColor = GetRandomColor(rnd);
+            Kael.BackgroundColor = GetRandomColor(rnd);
+            Keha.BackgroundColor = GetRandomColor(rnd);
+        }
 
-    private async void OnMeltButtonClicked(object sender, EventArgs e)
-    {
-        double targetY = Height + Container.Height;
 
-        await Container.TranslateTo(0, targetY, 2000, Easing.CubicIn);
-        await Container.FadeTo(0, 3000, Easing.CubicOut);
+        private async void OnMeltButtonClicked(object sender, EventArgs e)
+        {
+            double targetY = Height + Container.Height;
 
-        Container.IsVisible = false;
+            await Container.TranslateTo(0, targetY, 2000, Easing.CubicIn);
+            await Container.FadeTo(0, 3000, Easing.CubicOut);
 
-        await Pea.ScaleTo(0, 1000);
-        await Kael.ScaleTo(0, 1000, Easing.CubicOut);
-        await Keha.ScaleTo(0, 1000, Easing.CubicOut);
+            Container.IsVisible = false;
 
-        await Task.WhenAll(
-        Pea.TranslateTo(0, 200, 2000),
-        Kael.TranslateTo(0, 200, 2000),
-        Keha.TranslateTo(0, 200, 2000));
-    }
+            await Pea.ScaleTo(0, 1000);
+            await Kael.ScaleTo(0, 1000, Easing.CubicOut);
+            await Keha.ScaleTo(0, 1000, Easing.CubicOut);
 
-    private async void OnJumpButtonClicked(object sender, EventArgs e)
-    {
-        await Container.TranslateTo(0, -20, 250, Easing.CubicOut);
+            await Task.WhenAll(
+            Pea.TranslateTo(0, 200, 2000),
+            Kael.TranslateTo(0, 200, 2000),
+            Keha.TranslateTo(0, 200, 2000));
+        }
 
-        await Container.TranslateTo(0, 0, 250, Easing.CubicIn);
+
+        private async void OnJumpButtonClicked(object sender, EventArgs e)
+        {
+            await Container.TranslateTo(0, -20, 250, Easing.CubicOut);
+
+            await Container.TranslateTo(0, 0, 250, Easing.CubicIn);
+        }
     }
 }

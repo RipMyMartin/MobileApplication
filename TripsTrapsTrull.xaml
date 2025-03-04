@@ -3,13 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MobileApplication.TripsTrapsTrull"
              Title="TripsTrapsTrull">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" 
-            />
-    </VerticalStackLayout>
+
+    <!-- Main Grid for Layout --><!--
+    <Grid>
+        --><!-- Row and Column Definitions for the TicTacToe Game Grid --><!--
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            --><!-- Buttons Section --><!--
+            <RowDefinition Height="*"/>
+            --><!-- TicTacToe Game Grid --><!--
+            <RowDefinition Height="Auto"/>
+            --><!-- Result Section --><!--
+        </Grid.RowDefinitions>
+
+        --><!-- Game Control Buttons: Choose First Player & New Game --><!--
+        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Margin="10">
+            <Button x:Name="btnFirstPlayer" Text="Выбрать Первого Игрока" Clicked="btnFirstPlayer_Click" Margin="5"/>
+            <Button x:Name="btnNewGame" Text="Новая Игра" Clicked="btnNewGame_Click" Margin="5"/>
+        </HorizontalStackLayout>
+
+        --><!-- Game Grid (3x3 TicTacToe Grid) --><!--
+        <Grid Grid.Row="1" x:Name="GameGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            --><!-- Button cells for TicTacToe --><!--
+            <Button x:Name="Cell00" Clicked="Cell_Click" Grid.Row="0" Grid.Column="0" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell01" Clicked="Cell_Click" Grid.Row="0" Grid.Column="1" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell02" Clicked="Cell_Click" Grid.Row="0" Grid.Column="2" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell10" Clicked="Cell_Click" Grid.Row="1" Grid.Column="0" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell11" Clicked="Cell_Click" Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell12" Clicked="Cell_Click" Grid.Row="1" Grid.Column="2" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell20" Clicked="Cell_Click" Grid.Row="2" Grid.Column="0" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell21" Clicked="Cell_Click" Grid.Row="2" Grid.Column="1" BackgroundColor="Transparent"/>
+            <Button x:Name="Cell22" Clicked="Cell_Click" Grid.Row="2" Grid.Column="2" BackgroundColor="Transparent"/>
+        </Grid>
+
+        --><!-- Result Label or Popup --><!--
+        <Label Grid.Row="2" x:Name="lblResult" Text="Результат игры" HorizontalOptions="Center" Margin="10"/>
+    </Grid>-->
 </ContentPage>
-    
-    

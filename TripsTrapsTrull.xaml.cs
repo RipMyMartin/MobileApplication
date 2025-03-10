@@ -1,149 +1,394 @@
-﻿using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Controls.PlatformConfiguration.TizenSpecific;
+﻿using Microsoft.Maui.Controls;
+using System;
+using System.Linq;
 
-namespace MobileApplication;
-
-public partial class TripsTrapsTrull : ContentPage
+namespace MobileApplication
 {
-    private string[] board;
-    private bool isPlayerTurn;
-    public TripsTrapsTrull(int k)
+    public partial class TripsTrapsTrull : ContentPage
     {
-        InitializeComponent();
-        NewGame();
-    }
+            // Основные поля игры
+            Grid grid2x1, grid3x3;
+            Image b; 
+            Frame pokazatel;
+            Button uus_mang, pravala, temapilti, pole;
 
-    private void NewGame()
-    {
-        board = new string[9];
-        isPlayerTurn = true;
-        UpdateBoard();
-    }
+            public bool esimene;
+            public bool razmerepole;
 
-    private void UpdateBoard()
-    {
-        for (int i = 0; i < 9; i++)
-        {
-            var button = (Button)FindByName($"Button{i}");
-            button.Text = board[i] ?? string.Empty;
-            button.IsEnabled = string.IsNullOrEmpty(board[i]);
-        }
+            int tulemus = 0;
 
-        var winner = CheckWinner();
-        if (winner != null)
-        {
-            DisplayAlert("Game Over", winner == "Draw" ? "It's a draw!" : $"{winner} wins!", "New Game");
-            NewGame();
-        }
-    }
+            int[,] Tulemused = new int[4, 4];
+            int[,] Nicja = new int[4, 4];
 
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-        var button = (Button)sender;
-        int index = int.Parse(button.ClassId);
+            string[] krest = { "krestik.png", "xred.png" };
+            string[] nolik = { "nolik.png", "ored.png" };
 
-        if (isPlayerTurn)
-        {
-            board[index] = "X";
-            isPlayerTurn = false;
-            UpdateBoard();
-            ComputerMove();
-        }
-    }
+            int arazmerpole = 0;
+            int kartinkasmena = 0;
 
-    private void ComputerMove()
-    {
-        int? bestMove = FindBestMove();
-
-        if (bestMove.HasValue)
-        {
-            board[bestMove.Value] = "O";
-            isPlayerTurn = true;
-            UpdateBoard();
-        }
-    }
-
-    private int? FindBestMove()
-    {
-        for (int i = 0; i < 9; i++)
-        {
-            if (board[i] == null)
+            public TripsTrapsTrull(int k)
             {
-                board[i] = "O";
-                if (CheckWinner() == "O")
+                grid2x1 = new Grid
                 {
-                    board[i] = null;
-                    return i;
-                }
-                board[i] = null;
-            }
-        }
-
-        for (int i = 0; i < 9; i++)
-        {
-            if (board[i] == null)
-            {
-                board[i] = "X";
-                if (CheckWinner() == "X")
+                    VerticalOptions = LayoutOptions.FillAndExpand,
+                    BackgroundColor = Colors.DarkGray,
+                    RowDefinitions =
                 {
-                    board[i] = null;
-                    return i;
+                    new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                },
+                    ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                 }
-                board[i] = null;
+                };
+
+                Pole_Clicked();
+
+                // Создаем кнопки панели управления
+                uus_mang = new Button { Text = "Uus mäng" };
+                pravala = new Button { Text = "Reegel" };
+                temapilti = new Button { Text = "Välimus" };
+                pole = new Button { Text = "Välja suurus" };
+
+                pokazatel = new Frame
+                {
+                    BackgroundColor = Colors.DarkGray,
+                    WidthRequest = 30,
+                    HeightRequest = 30,
+                };
+
+                var topIndicator = new VerticalStackLayout
+                {
+                    HorizontalOptions = LayoutOptions.Center,
+                    Children = { pokazatel }
+                };
+
+                var buttonsRow1 = new HorizontalStackLayout
+                {
+                    Spacing = 10,
+                    Children = { uus_mang, pravala }
+                };
+
+                var buttonsRow2 = new HorizontalStackLayout
+                {
+                    Spacing = 10,
+                    Children = { pole, temapilti }
+                };
+
+                var controlPanel = new VerticalStackLayout
+                {
+                    Spacing = 10,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    Children = { topIndicator, buttonsRow1, buttonsRow2 }
+                };
+
+                grid2x1.Children.Add(controlPanel);
+                Grid.SetRow(controlPanel, 1);
+                Grid.SetColumn(controlPanel, 0);
+
+                // Подписываем кнопки на события
+                uus_mang.Clicked += Uus_mang_Clicked;
+                pravala.Clicked += Pravala_Clicked;
+                temapilti.Clicked += Temapilti_Clicked;
+                pole.Clicked += Pole_Clicked1;
+
+                Content = grid2x1;
             }
-        }
 
-        if (board[4] == null)
-        {
-            return 4;
-        }
-
-        int[] corners = { 0, 2, 6, 8 };
-        foreach (var corner in corners)
-        {
-            if (board[corner] == null)
+            public async void Pole_Clicked1(object sender, EventArgs e)
             {
-                return corner;
-            }
-        }
+                string razmerpoleInput = await DisplayPromptAsync(
+                    "Välja suurus",
+                    "Tee valiku 3x3 - 1 või 4x4 - 2",
+                    initialValue: "1",
+                    maxLength: 1,
+                    keyboard: Keyboard.Numeric);
 
-        for (int i = 0; i < 9; i++)
-        {
-            if (board[i] == null)
+                if (razmerpoleInput == "1")
+                    razmerepole = true;
+                else if (razmerpoleInput == "2")
+                    razmerepole = false;
+                else
+                    razmerepole = true;
+            }
+
+            public async void Pole_Clicked()
             {
-                return i;
+                string razmerpoleInput = await DisplayPromptAsync(
+                    "Välja suurus",
+                    "Tee valiku 3x3 - 1 või 4x4 - 2",
+                    initialValue: "1",
+                    maxLength: 1,
+                    keyboard: Keyboard.Numeric);
+
+                if (razmerpoleInput == "1")
+                {
+                    razmerepole = true;
+                    Uus_mang();
+                }
+                else if (razmerpoleInput == "2")
+                {
+                    razmerepole = false;
+                    Uus_mang();
+                }
+                else
+                {
+                    Pole_Clicked();
+                }
+            }
+
+            private void Temapilti_Clicked(object sender, EventArgs e)
+            {
+                Random r = new Random();
+                pokazatel.BackgroundColor = Color.FromRgb(r.Next(256), r.Next(256), r.Next(256));
+                grid2x1.BackgroundColor = Color.FromRgb(r.Next(256), r.Next(256), r.Next(256));
+            }
+
+            private void Pravala_Clicked(object sender, EventArgs e)
+            {
+                DisplayAlert(
+                    "Reegel",
+                    "3x3 - \n" +
+                    "Mängijad kordamööda panevad vabad lahtrid valdkonnas 3x3 märgid (üks on alati ristid, teine on alati null). " +
+                    "Võidab esimene, kes rivistab 3 oma tükki vertikaalselt, horisontaalselt või diagonaalselt. Esimese käigu teeb " +
+                    "mängija, kes paneb risti.\n\n" +
+                    "4x4 - \n" +
+                    "Tänu suuruse suurenemisele ilmub palju uusi käike ja siis muutub duell pingelisemaks. Reeglid jäävad samaks – " +
+                    "üks mängija saab joonistada ainult riste ja teine ringe. On vaja teha rida neljast identsest märgist " +
+                    "horisontaalselt, diagonaalselt või vertikaalselt.",
+                    "Ok");
+            }
+
+            public async void Kes_on_Esimene()
+            {
+                string esimineInput = await DisplayPromptAsync(
+                    "Kes on esimene?",
+                    "Tee valiku X - 1 või O - 2",
+                    initialValue: "1",
+                    maxLength: 1,
+                    keyboard: Keyboard.Numeric);
+
+                if (esimineInput == "1")
+                {
+                    esimene = true;
+                    pokazatel.Content = new Image { Source = krest[0] };
+                }
+                else if (esimineInput == "2")
+                {
+                    esimene = false;
+                    pokazatel.Content = new Image { Source = nolik[0] };
+                }
+                else
+                {
+                    Kes_on_Esimene();
+                }
+            }
+
+            private void Uus_mang_Clicked(object sender, EventArgs e)
+            {
+                Uus_mang();
+                temapilti.IsEnabled = true;
+                if (grid3x3 != null)
+                    grid3x3.IsEnabled = true;
+            }
+
+            // Запуск новой игры
+            public async void Uus_mang()
+            {
+                bool uus = await DisplayAlert(
+                    "Uus mäng",
+                    "Kas tõesti tahad uus mäng?",
+                    "Tahan küll!",
+                    "Ei taha!");
+
+                if (uus)
+                {
+                    Kes_on_Esimene();
+                    tulemus = -2;
+
+                    if (razmerepole == true)
+                    {
+                        Tulemused = new int[3, 3];
+                        Nicja = new int[3, 3];
+                        arazmerpole = 3;
+                    }
+                    else
+                    {
+                        Tulemused = new int[4, 4];
+                        Nicja = new int[4, 4];
+                        arazmerpole = 4;
+                    }
+
+                    grid3x3 = new Grid
+                    {
+                        BackgroundColor = Colors.White
+                    };
+
+                    for (int i = 0; i < arazmerpole; i++)
+                    {
+                        grid3x3.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                        grid3x3.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    }
+
+                    for (int row = 0; row < arazmerpole; row++)
+                    {
+                        for (int col = 0; col < arazmerpole; col++)
+                        {
+                            b = new Image { Source = "fon.jpg" };
+                            grid3x3.Children.Add(b);
+                            Grid.SetRow(b, row);
+                            Grid.SetColumn(b, col);
+
+                            var tap = new TapGestureRecognizer();
+                            tap.Tapped += Tap_Tapped;
+                            b.GestureRecognizers.Add(tap);
+                        }
+                    }
+
+                    grid2x1.Children.Add(grid3x3);
+                    Grid.SetRow(grid3x3, 0);
+                    Grid.SetColumn(grid3x3, 0);
+                }
+            }
+
+            public int Kontroll()
+            {
+                if (
+                    (Tulemused[0, 0] == 1 && Tulemused[1, 0] == 1 && Tulemused[2, 0] == 1) ||
+                    (Tulemused[0, 1] == 1 && Tulemused[1, 1] == 1 && Tulemused[2, 1] == 1) ||
+                    (Tulemused[0, 2] == 1 && Tulemused[1, 2] == 1 && Tulemused[2, 2] == 1) ||
+                    (Tulemused[0, 0] == 1 && Tulemused[0, 1] == 1 && Tulemused[0, 2] == 1) ||
+                    (Tulemused[1, 0] == 1 && Tulemused[1, 1] == 1 && Tulemused[1, 2] == 1) ||
+                    (Tulemused[2, 0] == 1 && Tulemused[2, 1] == 1 && Tulemused[2, 2] == 1) ||
+                    (Tulemused[0, 0] == 1 && Tulemused[1, 1] == 1 && Tulemused[2, 2] == 1) ||
+                    (Tulemused[0, 2] == 1 && Tulemused[1, 1] == 1 && Tulemused[2, 0] == 1)
+                   )
+                {
+                    tulemus = 1;
+                }
+                else if (
+                    (Tulemused[0, 0] == 2 && Tulemused[1, 0] == 2 && Tulemused[2, 0] == 2) ||
+                    (Tulemused[0, 1] == 2 && Tulemused[1, 1] == 2 && Tulemused[2, 1] == 2) ||
+                    (Tulemused[0, 2] == 2 && Tulemused[1, 2] == 2 && Tulemused[2, 2] == 2) ||
+                    (Tulemused[0, 0] == 2 && Tulemused[0, 1] == 2 && Tulemused[0, 2] == 2) ||
+                    (Tulemused[1, 0] == 2 && Tulemused[1, 1] == 2 && Tulemused[1, 2] == 2) ||
+                    (Tulemused[2, 0] == 2 && Tulemused[2, 1] == 2 && Tulemused[2, 2] == 2) ||
+                    (Tulemused[0, 0] == 2 && Tulemused[1, 1] == 2 && Tulemused[2, 2] == 2) ||
+                    (Tulemused[0, 2] == 2 && Tulemused[1, 1] == 2 && Tulemused[2, 0] == 2)
+                   )
+                {
+                    tulemus = 2;
+                }
+                else if (
+                    Tulemused[0, 0] == 4 && Tulemused[1, 0] == 4 && Tulemused[2, 0] == 4 &&
+                    Tulemused[0, 1] == 4 && Tulemused[1, 1] == 4 && Tulemused[2, 1] == 4 &&
+                    Tulemused[0, 2] == 4 && Tulemused[1, 2] == 4 && Tulemused[2, 2] == 4
+                )
+                {
+                    tulemus = -3;
+                }
+                return tulemus;
+            }
+
+            public int Kontroll4na4()
+            {
+                if (
+                    (Tulemused[0, 0] == 1 && Tulemused[1, 0] == 1 && Tulemused[2, 0] == 1 && Tulemused[3, 0] == 1) ||
+                    (Tulemused[0, 1] == 1 && Tulemused[1, 1] == 1 && Tulemused[2, 1] == 1 && Tulemused[3, 1] == 1) ||
+                    (Tulemused[0, 2] == 1 && Tulemused[1, 2] == 1 && Tulemused[2, 2] == 1 && Tulemused[3, 2] == 1) ||
+                    (Tulemused[0, 3] == 1 && Tulemused[1, 3] == 1 && Tulemused[2, 3] == 1 && Tulemused[3, 3] == 1) ||
+                    (Tulemused[0, 0] == 1 && Tulemused[0, 1] == 1 && Tulemused[0, 2] == 1 && Tulemused[0, 3] == 1) ||
+                    (Tulemused[1, 0] == 1 && Tulemused[1, 1] == 1 && Tulemused[1, 2] == 1 && Tulemused[1, 3] == 1) ||
+                    (Tulemused[2, 0] == 1 && Tulemused[2, 1] == 1 && Tulemused[2, 2] == 1 && Tulemused[2, 3] == 1) ||
+                    (Tulemused[3, 0] == 1 && Tulemused[3, 1] == 1 && Tulemused[3, 2] == 1 && Tulemused[3, 3] == 1) ||
+                    (Tulemused[0, 0] == 1 && Tulemused[1, 1] == 1 && Tulemused[2, 2] == 1 && Tulemused[3, 3] == 1) ||
+                    (Tulemused[0, 3] == 1 && Tulemused[1, 2] == 1 && Tulemused[2, 1] == 1 && Tulemused[3, 0] == 1)
+                )
+                {
+                    tulemus = 1;
+                }
+                else if (
+                    (Tulemused[0, 0] == 2 && Tulemused[1, 0] == 2 && Tulemused[2, 0] == 2 && Tulemused[3, 0] == 2) ||
+                    (Tulemused[0, 1] == 2 && Tulemused[1, 1] == 2 && Tulemused[2, 1] == 2 && Tulemused[3, 1] == 2) ||
+                    (Tulemused[0, 2] == 2 && Tulemused[1, 2] == 2 && Tulemused[2, 2] == 2 && Tulemused[3, 2] == 2) ||
+                    (Tulemused[0, 3] == 2 && Tulemused[1, 3] == 2 && Tulemused[2, 3] == 2 && Tulemused[3, 3] == 2) ||
+                    (Tulemused[0, 0] == 2 && Tulemused[0, 1] == 2 && Tulemused[0, 2] == 2 && Tulemused[0, 3] == 2) ||
+                    (Tulemused[1, 0] == 2 && Tulemused[1, 1] == 2 && Tulemused[1, 2] == 2 && Tulemused[1, 3] == 2) ||
+                    (Tulemused[2, 0] == 2 && Tulemused[2, 1] == 2 && Tulemused[2, 2] == 2 && Tulemused[2, 3] == 2) ||
+                    (Tulemused[3, 0] == 2 && Tulemused[3, 1] == 2 && Tulemused[3, 2] == 2 && Tulemused[3, 3] == 2) ||
+                    (Tulemused[0, 0] == 2 && Tulemused[1, 1] == 2 && Tulemused[2, 2] == 2 && Tulemused[3, 3] == 2) ||
+                    (Tulemused[0, 3] == 2 && Tulemused[1, 2] == 2 && Tulemused[2, 1] == 2 && Tulemused[3, 0] == 2)
+                )
+                {
+                    tulemus = 2;
+                }
+                else if (
+                    Tulemused[0, 0] == 4 && Tulemused[1, 0] == 4 && Tulemused[2, 0] == 4 && Tulemused[3, 0] == 4 &&
+                    Tulemused[0, 1] == 4 && Tulemused[1, 1] == 4 && Tulemused[2, 1] == 4 && Tulemused[3, 1] == 4 &&
+                    Tulemused[0, 2] == 4 && Tulemused[1, 2] == 4 && Tulemused[2, 2] == 4 && Tulemused[3, 2] == 4 &&
+                    Tulemused[0, 3] == 4 && Tulemused[1, 3] == 4 && Tulemused[2, 3] == 4 && Tulemused[3, 3] == 4
+                )
+                {
+                    tulemus = -3;
+                }
+                return tulemus;
+            }
+
+            public void Lopp()
+            {
+                tulemus = razmerepole ? Kontroll() : Kontroll4na4();
+
+                if (tulemus == 1)
+                {
+                    DisplayAlert("Võit", "X on võitja!", "Ok");
+                    grid3x3.IsEnabled = false;
+                    pole.IsEnabled = true;
+                }
+                else if (tulemus == 2)
+                {
+                    DisplayAlert("Võit", "O on võitja!", "Ok");
+                    grid3x3.IsEnabled = false;
+                    pole.IsEnabled = true;
+                }
+                else if (tulemus == -3)
+                {
+                    DisplayAlert("Võit", "Viik!", "Ok");
+                }
+            }
+
+            public void Tap_Tapped(object sender, EventArgs e)
+            {
+                var cellImage = (Image)sender;
+                int row = Grid.GetRow(cellImage);
+                int col = Grid.GetColumn(cellImage);
+
+                if (esimene)
+                {
+                    cellImage = new Image { Source = krest[kartinkasmena] };
+                    pokazatel.Content = new Image { Source = nolik[0] };
+                    esimene = false;
+                    Tulemused[row, col] = 1;
+                    Nicja[row, col] = 4;
+                }
+                else
+                {
+                    cellImage = new Image { Source = nolik[kartinkasmena] };
+                    pokazatel.Content = new Image { Source = krest[0] };
+                    esimene = true;
+                    Tulemused[row, col] = 2;
+                    Nicja[row, col] = 4;
+                }
+
+                grid3x3.Children.Add(cellImage);
+                Grid.SetRow(cellImage, row);
+                Grid.SetColumn(cellImage, col);
+
+                temapilti.IsEnabled = false;
+                pole.IsEnabled = false;
+
+                Lopp();
             }
         }
-
-        return null;
     }
-
-    private string CheckWinner()
-    {
-        string[,] winningCombinations = new string[,]
-        {
-                { "0", "1", "2" },
-                { "3", "4", "5" },
-                { "6", "7", "8" },
-                { "0", "3", "6" },
-                { "1", "4", "7" },
-                { "2", "5", "8" },
-                { "0", "4", "8" },
-                { "2", "4", "6" }
-        };
-
-        for (int i = 0; i < winningCombinations.GetLength(0); i++)
-        {
-            string a = board[int.Parse(winningCombinations[i, 0])];
-            string b = board[int.Parse(winningCombinations[i, 1])];
-            string c = board[int.Parse(winningCombinations[i, 2])];
-
-            if (a != null && a == b && a == c)
-            {
-                return a;
-            }
-        }
-
-        return board.All(b => b != null) ? "Draw" : null;
-    }
-}

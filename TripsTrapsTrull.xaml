@@ -3,10 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MobileApplication.TripsTrapsTrull"
              Title="grit">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <StackLayout Padding="10" Spacing="10">
+        <Grid x:Name="BoardGrid" 
+          HorizontalOptions="FillAndExpand" 
+          VerticalOptions="FillAndExpand" 
+          BackgroundColor="LightGray" />
+
+        <Button Text="Change board size" 
+            Clicked="OnChangeBoardSizeClicked" />
+
+        <Button Text="Change symbol" 
+            Clicked="OnChangeSymbolsClicked" />
+        
+        <Button Text="Change color" 
+            Clicked="OnChangeColorClicked" />
+        
+        <Button Text="Turn on Bot" 
+            Clicked="TurnOnOffBotClicked" />
+        
+        <Button Text="New game" 
+            Clicked="NewGameClicked" />
+    </StackLayout>
 </ContentPage>

@@ -10,6 +10,7 @@ public partial class TripsTrapsTrull : ContentPage
     private int _boardSize = 3;
     private Button[,] _buttons;
     private bool _isXTurn = true;
+    private Color _defaultButtonColor = Colors.LightGray;
 
 
     public TripsTrapsTrull(int k)
@@ -39,7 +40,8 @@ public partial class TripsTrapsTrull : ContentPage
                 var cellButton = new Button
                 {
                     FontSize = 48,
-                    BackgroundColor = Colors.Black,
+                    TextColor = Colors.Black,
+                    BackgroundColor = _defaultButtonColor,
                     BorderColor = Colors.Black,
                     BorderWidth = 2,
                     Text = ""
@@ -112,13 +114,13 @@ public partial class TripsTrapsTrull : ContentPage
 
     private async void DisplayWin(string winner)
     {
-        await DisplayAlert("Поздравляем!", $"Победил {winner}!", "OK");
+        await DisplayAlert("Palju onne", $"Voitnud {winner}!", "OK");
         NewGameClicked(null, null);
     }
 
     private async void OnChangeBoardSizeClicked(object sender, EventArgs e)
     {
-        string result = await DisplayActionSheet("Выберите размер поля:", "Отмена", null, "3", "4", "5", "6", "7", "8", "9");
+        string result = await DisplayActionSheet("Valige valja suurust ", "tuhista", null, "3", "4", "5", "6", "7", "8", "9");
         if (int.TryParse(result, out int size))
         {
             _boardSize = size;
@@ -128,36 +130,33 @@ public partial class TripsTrapsTrull : ContentPage
 
     private async void OnChangeSymbolsClicked(object sender, EventArgs e)
     {
-        string newX = await DisplayActionSheet("Выберите символ для X:", "Отмена", null, "X", "A", "1", "*", "#");
-        string newO = await DisplayActionSheet("Выберите символ для O:", "Отмена", null, "O", "B", "2", "@", "$");
+        string newX = await DisplayActionSheet("Vali sumbol X:", "Tuhista", null, "X", "A", "1", "*", "#");
+        string newO = await DisplayActionSheet("Vali sumbol O:", "Tuhista", null, "O", "B", "2", "@", "$");
 
         if (!string.IsNullOrWhiteSpace(newX)) _xSymbol = newX;
         if (!string.IsNullOrWhiteSpace(newO)) _oSymbol = newO;
     }
 
-    private async void OnChangeColorClicked(object sender, EventArgs e)
-    {
-        string color = await DisplayActionSheet("Выберите цвет фона:", "Отмена", null, "Белый", "Желтый", "Зеленый", "Голубой");
-        switch (color)
+        private async void OnChangeColorClicked(object sender, EventArgs e)
         {
-            case "Желтый":
-                BoardGrid.BackgroundColor = Colors.Yellow;
-                break;
-            case "Зеленый":
-                BoardGrid.BackgroundColor = Colors.Green;
-                break;
-            case "Голубой":
-                BoardGrid.BackgroundColor = Colors.LightBlue;
-                break;
-            default:
-                BoardGrid.BackgroundColor = Colors.White;
-                break;
-        }
-    }
+            string action = await DisplayActionSheet("Valige teema",
+                "Tuhista", null,
+                "Default",
+                "Dark"
+                );
 
-    private void TurnOnOffBotClicked(object sender, EventArgs e)
-    {
-        // TODO: Реализовать бота
+        switch (action)
+            {
+            case "Defauld":
+                Application.Current.UserAppTheme = AppTheme.Light;
+                _defaultButtonColor = Colors.LightGray;
+                break;
+            case "Dark":
+                Application.Current.UserAppTheme = AppTheme.Dark;
+                _defaultButtonColor = Colors.DarkGray;
+                break;
+
+        }
     }
 
     private void NewGameClicked(object sender, EventArgs e)

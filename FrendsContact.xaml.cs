@@ -12,13 +12,14 @@ namespace MobileApplication
 
         private async void SendSMS_Clicked(object sender, EventArgs e)
         {
-            string phone = emailPhone.Text;
+            /*string phone = emailPhone.Text;
             var message = "Tere tulemast! saadan sõnumi";
             SmsMessage sms = new SmsMessage(message, phone);
             if (phone != null && Sms.Default.IsComposeSupported)
             {
                 await Sms.Default.ComposeAsync(sms);
             }
+            */
         }
 
         private async void SendEmail_Clicked(object sender, EventArgs e)
@@ -26,10 +27,10 @@ namespace MobileApplication
             var message = "Tere tulemast! saadan email";
             EmailMessage eMail = new EmailMessage
             {
-                Subject = emailPhone.Text,
+                //Subject = emailPhone.Text,
                 Body = message,
                 BodyFormat = EmailBodyFormat.PlainText,
-                To = new List<string> { emailPhone.Text }
+                //To = new List<string> { emailPhone.Text }
             };
 
             if (Email.Default.IsComposeSupported)

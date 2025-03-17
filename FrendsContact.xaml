@@ -7,12 +7,20 @@
              >
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-        <Entry x:Name="emailPhone" Placeholder="Enter email or phone number" />
+        <Label Text="Nimi"></Label>
+        
+        <Entry x:Name="entryName" Placeholder="Enter nimi"></Entry>
 
+        <Label Text="Kontaktandmed"></Label>
+            
+        <Entry x:Name="entryPhone" Placeholder="Enrty Phone" />
+
+        <Entry x:Name="entryEmail" Placeholder="Entry Email"  />
+
+        
         <Button Text="Send SMS" 
             Clicked="SendSMS_Clicked" />
 

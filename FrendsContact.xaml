@@ -4,12 +4,10 @@
              x:Class="MobileApplication.FrendsContact"
              Title="FrendsContact">
     <VerticalStackLayout Spacing="10">
-        <!-- Basic Information Section -->
-        <Label 
-            Text="Põhiandmed"
-            HorizontalOptions="Start"
-            TextColor="Black"
-            FontAttributes="Bold" />
+        <Label Text="Põhiandmed"
+               HorizontalOptions="Start"
+               TextColor="Black"
+               FontAttributes="Bold" />
 
         <TableView>
             <TableRoot>
@@ -19,17 +17,29 @@
             </TableRoot>
         </TableView>
 
-        <Label 
-            Text="Kontakt Andmed"
-            HorizontalOptions="Start"
-            TextColor="Black"
-            FontAttributes="Bold" />
+        <Label Text="Kontakt Andmed"
+               HorizontalOptions="Start"
+               TextColor="Black"
+               FontAttributes="Bold" />
 
         <TableView>
             <TableRoot>
                 <TableSection>
                     <EntryCell LabelColor="Black" Label="Telefon" Placeholder="Sisesta tel. number" Keyboard="Telephone" x:Name="phoneEntry" />
                     <EntryCell LabelColor="Black" Label="Email" Placeholder="Sisesta email" Keyboard="Email" x:Name="emailEntry" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
+
+        <Label Text="Pühadetervitus"
+               HorizontalOptions="Start"
+               TextColor="Black"
+               FontAttributes="Bold" />
+
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <EntryCell LabelColor="Black" Label="Sõnum" Placeholder="Sisesta sõnum" x:Name="messageEntry" />
                 </TableSection>
             </TableRoot>
         </TableView>
@@ -49,7 +59,7 @@
             </TableRoot>
         </TableView>
 
-        <TableView x:Name="imageTableView">
+        <TableView x:Name="imageTableView" IsVisible="False">
             <TableRoot>
                 <TableSection>
                     <ImageCell>
@@ -66,20 +76,14 @@
         <TableView>
             <TableRoot>
                 <TableSection>
-                    <EntryCell LabelColor="Black" Label="Sõnum" Placeholder="Sisesta sõnum" x:Name="messageEntry" />
-                </TableSection>
-            </TableRoot>
-        </TableView>
-
-        <TableView>
-            <TableRoot>
-                <TableSection>
                     <ViewCell>
                         <ViewCell.View>
                             <HorizontalStackLayout Spacing="10" HorizontalOptions="FillAndExpand">
-                                <Button Text="HELISTA" Clicked="CallButton_Clicked" HorizontalOptions="StartAndExpand" />
-                                <Button Text="SAADA SMS" Clicked="SendSmsButton_Clicked" HorizontalOptions="Center" />
-                                <Button Text="SAADA EMAIL" Clicked="SendEmailButton_Clicked" HorizontalOptions="End" />
+                                <Button Text="Helista" Clicked="CallButton_Clicked" HorizontalOptions="StartAndExpand" ></Button>
+                                <Button Text="SMS" Clicked="SendSmsButton_Clicked" HorizontalOptions="Center" ></Button>
+                                <Button Text="Email" Clicked="SendEmailButton_Clicked" HorizontalOptions="End" ></Button>
+                                <Button Text="Pilt" Clicked="TakePhotoButton_Clicked"></Button>
+                                <Button Text="Õnnitlused" Clicked="SendRandomGreetingButton_Clicked" />
                             </HorizontalStackLayout>
                         </ViewCell.View>
                     </ViewCell>

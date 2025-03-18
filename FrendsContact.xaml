@@ -2,29 +2,89 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MobileApplication.FrendsContact"
-             Title="FrendsContact"
-             
-             >
-    <VerticalStackLayout>
+             Title="FrendsContact">
+    <VerticalStackLayout Spacing="10">
+        <!-- Basic Information Section -->
         <Label 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            Text="Põhiandmed"
+            HorizontalOptions="Start"
+            TextColor="Black"
+            FontAttributes="Bold" />
 
-        <Label Text="Nimi"></Label>
-        
-        <Entry x:Name="entryName" Placeholder="Enter nimi"></Entry>
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <EntryCell LabelColor="Black" Label="Nimi:" Placeholder="Sisesta oma sõbra nimi" Keyboard="Default" x:Name="nameEntry" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
 
-        <Label Text="Kontaktandmed"></Label>
-            
-        <Entry x:Name="entryPhone" Placeholder="Enrty Phone" />
+        <Label 
+            Text="Kontakt Andmed"
+            HorizontalOptions="Start"
+            TextColor="Black"
+            FontAttributes="Bold" />
 
-        <Entry x:Name="entryEmail" Placeholder="Entry Email"  />
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <EntryCell LabelColor="Black" Label="Telefon" Placeholder="Sisesta tel. number" Keyboard="Telephone" x:Name="phoneEntry" />
+                    <EntryCell LabelColor="Black" Label="Email" Placeholder="Sisesta email" Keyboard="Email" x:Name="emailEntry" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
 
-        
-        <Button Text="Send SMS" 
-            Clicked="SendSMS_Clicked" />
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <HorizontalStackLayout Spacing="10" HorizontalOptions="FillAndExpand">
+                                <Label x:Name="toggleLabel" Text="Näita veel" TextColor="Black" HorizontalOptions="StartAndExpand" />
+                                <Switch IsToggled="false" Toggled="Sc_OnChange" HorizontalOptions="End" />
+                            </HorizontalStackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
 
-        <Button Text="Send Email"
-            Clicked="SendEmail_Clicked"/>
+        <TableView x:Name="imageTableView">
+            <TableRoot>
+                <TableSection>
+                    <ImageCell>
+                        <ImageCell.ImageSource>
+                            <FileImageSource File="pilt.jpg" />
+                        </ImageCell.ImageSource>
+                        <ImageCell.Text>Foto nimetus</ImageCell.Text>
+                        <ImageCell.Detail>Foto kirjeldus</ImageCell.Detail>
+                    </ImageCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <EntryCell LabelColor="Black" Label="Sõnum" Placeholder="Sisesta sõnum" x:Name="messageEntry" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
+
+        <TableView>
+            <TableRoot>
+                <TableSection>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <HorizontalStackLayout Spacing="10" HorizontalOptions="FillAndExpand">
+                                <Button Text="HELISTA" Clicked="CallButton_Clicked" HorizontalOptions="StartAndExpand" />
+                                <Button Text="SAADA SMS" Clicked="SendSmsButton_Clicked" HorizontalOptions="Center" />
+                                <Button Text="SAADA EMAIL" Clicked="SendEmailButton_Clicked" HorizontalOptions="End" />
+                            </HorizontalStackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </VerticalStackLayout>
 </ContentPage>

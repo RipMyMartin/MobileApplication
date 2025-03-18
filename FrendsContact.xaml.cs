@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Maui.Controls;
 
 namespace MobileApplication
 {
@@ -10,32 +11,60 @@ namespace MobileApplication
             InitializeComponent();
         }
 
-        private async void SendSMS_Clicked(object sender, EventArgs e)
+        private void Sc_OnChange(object sender, ToggledEventArgs e)
         {
-            /*string phone = emailPhone.Text;
-            var message = "Tere tulemast! saadan sõnumi";
-            SmsMessage sms = new SmsMessage(message, phone);
-            if (phone != null && Sms.Default.IsComposeSupported)
+            if (e.Value)
             {
-                await Sms.Default.ComposeAsync(sms);
+                imageTableView.IsVisible = true;
+                toggleLabel.Text = "Näita vähem"; 
             }
-            */
+            else
+            {
+                imageTableView.IsVisible = false;
+                toggleLabel.Text = "Näita veel"; 
+            }
         }
 
-        private async void SendEmail_Clicked(object sender, EventArgs e)
+        private async void CallButton_Clicked(object sender, EventArgs e)
         {
-            var message = "Tere tulemast! saadan email";
-            EmailMessage eMail = new EmailMessage
+            var phoneNumber = phoneEntry.Text; 
+            if (!string.IsNullOrEmpty(phoneNumber))
             {
-                //Subject = emailPhone.Text,
-                Body = message,
-                BodyFormat = EmailBodyFormat.PlainText,
-                //To = new List<string> { emailPhone.Text }
-            };
+                PhoneDialer.Open(phoneNumber);
+            }
+            else
+            {
+                await DisplayAlert("Viga", "Telefoninumber puudub", "OK");
+            }
+        }
 
-            if (Email.Default.IsComposeSupported)
+        private async void SendSmsButton_Clicked(object sender, EventArgs e)
+        {
+            var phoneNumber = phoneEntry.Text; 
+            var message = messageEntry.Text; 
+
+            if (!string.IsNullOrEmpty(phoneNumber) && !string.IsNullOrEmpty(message))
             {
-                await Email.Default.ComposeAsync(eMail);
+                await Sms.ComposeAsync(new SmsMessage(message, phoneNumber));
+            }
+            else
+            {
+                await DisplayAlert("Viga", "Telefoninumber või sõnum puudub", "OK");
+            }
+        }
+
+        private async void SendEmailButton_Clicked(object sender, EventArgs e)
+        {
+            var email = emailEntry.Text;
+            var message = messageEntry.Text; 
+
+            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(message))
+            {
+                await Email.ComposeAsync("Teema", message, email);
+            }
+            else
+            {
+                await DisplayAlert("Viga", "Email või sõnum puudub", "OK");
             }
         }
     }

@@ -48,7 +48,7 @@
                 var imageCell = new ImageCell
                 {
                     ImageSource = imageSource,
-                    Text = "Sõbra pilt",
+                    Text = nameEntry.Text,
                     Detail = "Pilt tehtud kaameraga"
                 };
                 var section = new TableSection();

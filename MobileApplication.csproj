@@ -58,7 +58,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\cross.png" />
-	  <None Remove="Resources\Images\krestik.png" />
+	  <None Remove="Resources\Images\defaultimage.png" />
 	  <None Remove="Resources\Images\nolik.png" />
 	</ItemGroup>
 
@@ -69,7 +69,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="CountryList.xaml">
+	  <MauiXaml Update="Country\CountryList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="FrendsContact.xaml">
